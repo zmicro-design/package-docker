@@ -6,12 +6,12 @@
 is_docker_installed() {
   which docker >> /dev/null 2>&1
   if [ "$?" != "0" ]; then
-    log_debug "[is_docker_installed] Docker not found"
+    log::debug "[is_docker_installed] Docker not found"
     return 1
   fi
 
   DOCKER_VERSION=$(get_docker_version)
-  log_info "Docker Installed(version: ${DOCKER_VERSION})"
+  log::info "Docker Installed(version: ${DOCKER_VERSION})"
   return 0
 }
 
@@ -31,7 +31,7 @@ create_network() {
   # fi
 
   if ! is_network_exist; then
-    log_info "Create Network: ${PACKAGE_DOCKER_DEFAULT_NETWORK}"
+    log::info "Create Network: ${PACKAGE_DOCKER_DEFAULT_NETWORK}"
     sudo docker network create $PACKAGE_DOCKER_DEFAULT_NETWORK >> /dev/null 2>&1
   fi
 }
@@ -39,7 +39,7 @@ create_network() {
 try_to_remove_podman() {
   which podman >>/dev/null 2>&1
   if [ "$?" = "0" ]; then
-    log_info "Found podman, removing ..."
+    log::info "Found podman, removing ..."
     pm remove -y podman
 
     # Clean
@@ -48,7 +48,7 @@ try_to_remove_podman() {
     #   2. docker-compose
     sudo rm -rf `which docker-compose`
 
-    # log_info "Upgrade Docker ..."
+    # log::info "Upgrade Docker ..."
   fi
 }
 
@@ -60,7 +60,7 @@ install_docker_core() {
     return 
   fi
 
-  log_info "Install Docker ..."
+  log::info "Install Docker ..."
   if [ "$(os_is_macos)" = "true" ]; then
     # MacOS
     # 1. CLI
@@ -92,7 +92,7 @@ start_docker() {
   # Linux
   sudo systemctl status docker >> /dev/null 2>&1
   if [ "$?" != "0" ]; then
-    log_info "Start Docker daemon ..."
+    log::info "Start Docker daemon ..."
 
     sudo systemctl enable docker
     sudo systemctl start docker
@@ -114,7 +114,7 @@ remove_docker_compose() {
 
 install() {
   if [ "$(os_is_docker)" = "true" ]; then
-    log_warn "You are in docker env, use bind /var/run/docker.sock instead of."
+    log::warn "You are in docker env, use bind /var/run/docker.sock instead of."
     return 
   fi
 
