@@ -61,7 +61,7 @@ install_docker_core() {
   fi
 
   log::info "Install Docker ..."
-  if [ "$(os_is_macos)" = "true" ]; then
+  if [ "$(os::is_macos)" = "true" ]; then
     # MacOS
     # 1. CLI
     brew install docker
@@ -85,7 +85,7 @@ install_docker_compose() {
 }
 
 start_docker() {
-  if [ "$(os_is_macos)" = "true" ]; then
+  if [ "$(os::is_macos)" = "true" ]; then
     return
   fi
 
