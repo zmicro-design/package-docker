@@ -113,7 +113,7 @@ remove_docker_compose() {
 }
 
 install() {
-  if [ "$(os_is_docker)" = "true" ]; then
+  if [ "$(os::is_docker)" = "true" ]; then
     log::warn "You are in docker env, use bind /var/run/docker.sock instead of."
     return 
   fi
