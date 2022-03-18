@@ -97,6 +97,9 @@ start_docker() {
     sudo systemctl enable docker
     sudo systemctl start docker
   fi
+
+  # @TODO create defaul network
+  sudo docker network create compose-ingress
 }
 
 stop_docker() {
