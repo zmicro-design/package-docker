@@ -21,7 +21,11 @@ get_docker_version() {
 
 is_network_exist() {
   sudo docker network inspect $PACKAGE_DOCKER_DEFAULT_NETWORK >>/dev/null 2>&1
-  return $?
+  if [ "$?" = "0" ]; then
+    echo "true"
+  else
+    echo "false"
+  fi
 }
 
 create_network() {
@@ -30,7 +34,7 @@ create_network() {
   #   sudo docker network create $PACKAGE_DOCKER_DEFAULT_NETWORK
   # fi
 
-  if ! is_network_exist; then
+  if [ "$(is_network_exist)" = "false" ]; then
     log::info "Create Network: ${PACKAGE_DOCKER_DEFAULT_NETWORK}"
     sudo docker network create $PACKAGE_DOCKER_DEFAULT_NETWORK >> /dev/null 2>&1
   fi
@@ -46,7 +50,7 @@ try_to_remove_podman() {
     #   1. docker
     sudo rm -rf `which docker`
     #   2. docker-compose
-    sudo rm -rf `which docker-compose`
+    # sudo rm -rf `which docker-compose`
 
     # log::info "Upgrade Docker ..."
   fi
@@ -125,7 +129,7 @@ install() {
 
   install_docker_core
 
-  install_docker_compose
+  # install_docker_compose
 
   start_docker
 }
@@ -146,8 +150,8 @@ remove() {
   log "Remove Docker ..."
   remove_docker_core
 
-  log "Remove Docker Compose ..."
-  remove_docker_compose
+  # log "Remove Docker Compose ..."
+  # remove_docker_compose
 }
 
 export -f is_docker_installed
