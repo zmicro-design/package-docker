@@ -49,8 +49,6 @@ try_to_remove_podman() {
     # Clean
     #   1. docker
     sudo rm -rf `which docker`
-    #   2. docker-compose
-    # sudo rm -rf `which docker-compose`
 
     # log::info "Upgrade Docker ..."
   fi
@@ -84,10 +82,6 @@ install_docker_core() {
   fi
 }
 
-install_docker_compose() {
-  zpackage install docker-compose
-}
-
 start_docker() {
   if [ "$(os::is_macos)" = "true" ]; then
     return
@@ -115,10 +109,6 @@ remove_docker_core() {
   pm remove -y docker-ce docker-ce-cli containerd.io
 }
 
-remove_docker_compose() {
-  zpackage remove docker-compose
-}
-
 install() {
   if [ "$(os::is_docker)" = "true" ]; then
     log::warn "You are in docker env, use bind /var/run/docker.sock instead of."
@@ -128,8 +118,6 @@ install() {
   try_to_remove_podman
 
   install_docker_core
-
-  # install_docker_compose
 
   start_docker
 }
@@ -149,9 +137,6 @@ remove() {
 
   log "Remove Docker ..."
   remove_docker_core
-
-  # log "Remove Docker Compose ..."
-  # remove_docker_compose
 }
 
 export -f is_docker_installed
@@ -160,11 +145,9 @@ export -f is_network_exist
 export -f create_network
 export -f try_to_remove_podman
 export -f install_docker_core
-export -f install_docker_compose
 export -f start_docker
 export -f stop_docker
 export -f remove_docker_core
-export -f remove_docker_compose
 
 export -f install
 export -f remove
