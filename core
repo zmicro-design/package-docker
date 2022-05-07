@@ -96,8 +96,12 @@ start_docker() {
     sudo systemctl start docker
   fi
 
-  # @TODO create defaul network
-  sudo docker network create compose-ingress
+  # @TODO create default network
+  # sudo docker network create compose-ingress
+  if [ "$(is_network_exist)" = "false" ]; then
+    log::info "Create Network: ${PACKAGE_DOCKER_DEFAULT_NETWORK}"
+    sudo docker network create $PACKAGE_DOCKER_DEFAULT_NETWORK >> /dev/null 2>&1
+  fi
 }
 
 stop_docker() {
