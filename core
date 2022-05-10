@@ -82,6 +82,25 @@ install_docker_core() {
   fi
 }
 
+install_docker_cli_only() {
+  local DOCKERVERSION=20.10.14
+  local tmp_download_dir=
+
+  if [ "$(os::has_command os::tmp_dir)" = "true" ]; then
+    tmp_download_dir=$(os::tmp_dir)
+  else
+    tmp_download_dir=/tmp/tmp_download_dir
+  fi
+
+  mkdir -p $tmp_download_dir
+  cd $tmp_download_dir
+  curl -fsSLO https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKERVERSION}.tgz
+  sudo tar xzvf docker-${DOCKERVERSION}.tgz --strip 1 -C /usr/local/bin docker/docker
+  sudo rm docker-${DOCKERVERSION}.tgz
+  cd -
+  rm -rf $tmp_download_dir
+}
+
 start_docker() {
   if [ "$(os::is_macos)" = "true" ]; then
     return
@@ -115,7 +134,19 @@ remove_docker_core() {
 
 install() {
   if [ "$(os::is_docker)" = "true" ]; then
-    log::warn "You are in docker env, use bind /var/run/docker.sock instead of."
+    log::warn "You are in docker env."
+
+    if [ "$(os::has_command docker)" = "false" ]; then
+      log::info "Install Docker CLI Only ..."
+      install_docker_cli_only
+    fi
+
+    # if [ ! -f "/var/run/docker.sock" ]; then
+    file /var/run/docker.sock >> /dev/null 2>&1
+    if [ "$?" != "0" ]; then
+      log::error "You have not binded /var/run/docker.sock."
+      exit 1
+    fi
     return 
   fi
 
