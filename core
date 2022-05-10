@@ -186,3 +186,5 @@ export -f remove_docker_core
 
 export -f install
 export -f remove
+
+export -f install_docker_cli_only
