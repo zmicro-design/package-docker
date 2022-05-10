@@ -94,7 +94,7 @@ install_docker_cli_only() {
 
   mkdir -p $tmp_download_dir
   cd $tmp_download_dir
-  curl -fsSLO https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKERVERSION}.tgz
+  curl -fSLO https://download.docker.com/linux/static/stable/x86_64/docker-${DOCKERVERSION}.tgz
   sudo tar xzvf docker-${DOCKERVERSION}.tgz --strip 1 -C /usr/local/bin docker/docker
   sudo rm docker-${DOCKERVERSION}.tgz
   cd -
