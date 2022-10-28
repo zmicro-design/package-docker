@@ -141,12 +141,12 @@ install() {
       install_docker_cli_only
     fi
 
-    # if [ ! -f "/var/run/docker.sock" ]; then
-    file /var/run/docker.sock >> /dev/null 2>&1
-    if [ "$?" != "0" ]; then
-      log::error "You have not binded /var/run/docker.sock."
-      exit 1
-    fi
+    # # if [ ! -f "/var/run/docker.sock" ]; then
+    # file /var/run/docker.sock >> /dev/null 2>&1
+    # if [ "$?" != "0" ]; then
+    #   log::error "You have not binded /var/run/docker.sock."
+    #   exit 1
+    # fi
     return 
   fi
 
