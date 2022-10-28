@@ -67,10 +67,13 @@ install_docker_core() {
     # MacOS
     # 1. CLI
     brew install docker
-    # 2. Runtime
-    brew install colima
-    # 3. Start
-    colima start --cpu 4 --memory 8 --disk 100
+
+    if [ "$(os::is_ci)" != "true" ]; then
+      # 2. Runtime
+      brew install colima
+      # 3. Start
+      colima start --cpu 4 --memory 8 --disk 100
+    fi
   else
     # Linux
     sudo curl -fsSL https://get.docker.com -o $PACKAGE_DOCKER_TMP_INSTALL_SCRIPT
