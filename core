@@ -86,7 +86,7 @@ install_docker_core() {
 }
 
 install_docker_cli_only() {
-  local DOCKERVERSION=20.10.14
+  local DOCKERVERSION=20.10.21
   local tmp_download_dir=
 
   if [ "$(os::has_command os::tmp_dir)" = "true" ]; then
