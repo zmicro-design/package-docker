@@ -142,6 +142,9 @@ install() {
     if [ "$(os::has_command docker)" = "false" ]; then
       log::info "Install Docker CLI Only ..."
       install_docker_cli_only
+
+      log::info "Install DOcker CLI BuildX ..."
+      zmicro package install docker-buildx
     fi
 
     # # if [ ! -f "/var/run/docker.sock" ]; then
