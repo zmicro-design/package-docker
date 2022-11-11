@@ -136,8 +136,8 @@ remove_docker_core() {
 }
 
 install() {
-  if [ "$(os::is_docker)" = "true" ]; then
-    log::warn "You are in docker env."
+  if [ "$(os::is_docker)" = "true" ] || [ "$(os::is_docker_build_env)" = "true" ]; then
+    log::warn "You are in docker (build) env."
 
     if [ "$(os::has_command docker)" = "false" ]; then
       log::info "Install Docker CLI Only ..."
