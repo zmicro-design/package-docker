@@ -128,8 +128,8 @@ install() {
       log::info "Install Docker CLI Only (with buildx) ..."
       install_docker_cli_only
 
-      # log::info "Install Docker CLI BuildX ..."
-      # zmicro package install docker-buildx
+      log::info "Install Docker CLI BuildX ..."
+      zmicro package install docker-buildx
     fi
 
     # # if [ ! -f "/var/run/docker.sock" ]; then
