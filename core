@@ -92,12 +92,12 @@ docker::install_docker_cli_only() {
 docker::start_docker() {
   if [ "$(os::is_macos)" = "true" ]; then
     if [ "$(os::has_command colima)" = "true" ]; then
+      # 3. Start
+      log::info "[$(timestamp)] starting docker with colima ..."
+      zmicro colima start --cpu 4 --memory 8 --disk 100
+
+      log::info "[$(timestamp)] show docker status ..."
       zmicro colima status
-      if [ "$?" != "0" ]; then
-        # 3. Start
-        log::info "[$(timestamp)] starting docker with colima ..."
-        zmicro colima start --cpu 4 --memory 8 --disk 100
-      fi
     fi
     return
   fi
@@ -113,8 +113,9 @@ docker::start_docker() {
 
   # @TODO create default network
   # sudo docker network create compose-ingress
+  log::info "[$(timestamp)] checking docker network ..."
   if [ "$(docker::is_network_exist)" = "false" ]; then
-    log::info "Create Network: ${PACKAGE_DOCKER_DEFAULT_NETWORK}"
+    log::info "[$(timestamp)] create network: ${PACKAGE_DOCKER_DEFAULT_NETWORK}"
     sudo docker network create $PACKAGE_DOCKER_DEFAULT_NETWORK >>/dev/null 2>&1
   fi
 }
@@ -135,10 +136,10 @@ install() {
     log::warn "[$(timestamp)] You are in docker (build) env."
 
     if [ "$(os::has_command docker)" = "false" ]; then
-      log::info "Install Docker CLI Only (with buildx) ..."
+      log::info "[$(timestamp)] installing docker cli only (with buildx) ..."
       docker::install_docker_cli_only
 
-      log::info "Install Docker CLI BuildX ..."
+      log::info "[$(timestamp)] installing docker cli buildx ..."
       zmicro package install docker-buildx
     fi
 
@@ -171,10 +172,10 @@ remove() {
     exit 0
   fi
 
-  log "Stop Docker Daemon ..."
+  log "[$(timestamp)] stopping docker daemon ..."
   docker::stop_docker
 
-  log "Remove Docker ..."
+  log "[$(timestamp)] removeing old docker service ..."
   docker::remove_docker_core
 }
 
