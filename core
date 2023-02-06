@@ -41,8 +41,7 @@ docker::create_network() {
 }
 
 docker::try_to_remove_podman() {
-  which podman >>/dev/null 2>&1
-  if [ "$?" = "0" ]; then
+  if [ "$(os::has_command podman)" = "0" ]; then
     log::info "Found podman, removing ..."
     pm remove -y podman
 
@@ -92,8 +91,12 @@ docker::install_docker_cli_only() {
 docker::start_docker() {
   if [ "$(os::is_macos)" = "true" ]; then
     if [ "$(os::has_command colima)" = "true" ]; then
-      # 3. Start
-      zmicro colima start --cpu 4 --memory 8 --disk 100
+      zmicro colima status
+      if [ "$?" != "0" ]; then
+        # 3. Start
+        log::info "[$(timestamp)] starting docker with colima ..."
+        zmicro colima start --cpu 4 --memory 8 --disk 100
+      fi
     fi
     return
   fi
@@ -128,7 +131,7 @@ docker::remove_docker_core() {
 
 install() {
   if [ "$(os::is_docker)" = "true" ] || [ "$(os::is_docker_build_env)" = "true" ]; then
-    log::warn "You are in docker (build) env."
+    log::warn "[$(timestamp)] You are in docker (build) env."
 
     if [ "$(os::has_command docker)" = "false" ]; then
       log::info "Install Docker CLI Only (with buildx) ..."
@@ -147,10 +150,13 @@ install() {
     return
   fi
 
+  log::info "[$(timestamp)] checking podman and remove ..."
   docker::try_to_remove_podman
 
+  log::info "[$(timestamp)] installing docker service ..."
   docker::install_docker_core
 
+  log::info "[$(timestamp)] starting docker service ..."
   docker::start_docker
 }
 
