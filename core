@@ -4,7 +4,7 @@
 #   [Solved]: Stack Overflow: https://stackoverflow.com/questions/5431909/returning-a-boolean-from-a-bash-function
 #
 docker::is_docker_installed() {
-  which docker >> /dev/null 2>&1
+  which docker >>/dev/null 2>&1
   if [ "$?" != "0" ]; then
     log::debug "[docker::is_docker_installed] Docker not found"
     return 1
@@ -36,7 +36,7 @@ docker::create_network() {
 
   if [ "$(docker::is_network_exist)" = "false" ]; then
     log::info "Create Network: ${PACKAGE_DOCKER_DEFAULT_NETWORK}"
-    sudo docker network create $PACKAGE_DOCKER_DEFAULT_NETWORK >> /dev/null 2>&1
+    sudo docker network create $PACKAGE_DOCKER_DEFAULT_NETWORK >>/dev/null 2>&1
   fi
 }
 
@@ -48,7 +48,7 @@ docker::try_to_remove_podman() {
 
     # Clean
     #   1. docker
-    sudo rm -rf `which docker`
+    sudo rm -rf $(which docker)
 
     # log::info "Upgrade Docker ..."
   fi
@@ -59,21 +59,21 @@ docker::install_docker_core() {
   #   Useage
   if docker::is_docker_installed; then
     docker::create_network
-    return 
+    return
   fi
 
   log::info "Install Docker ..."
   if [ "$(os::is_macos)" = "true" ]; then
-    # MacOS
-    # 1. CLI
-    brew install docker
-
     if [ "$(os::is_ci)" != "true" ]; then
       # 2. Runtime
-      brew install colima
-      # 3. Start
-      colima start --cpu 4 --memory 8 --disk 100
+      # brew install colima
+      zmicro package install colima
     fi
+
+    # MacOS
+    # 1. CLI
+    # brew install docker
+    docker::install_docker_cli_only
   else
     # Linux
     sudo curl -fsSL https://get.docker.com -o $PACKAGE_DOCKER_TMP_INSTALL_SCRIPT
@@ -91,11 +91,15 @@ docker::install_docker_cli_only() {
 
 docker::start_docker() {
   if [ "$(os::is_macos)" = "true" ]; then
+    if [ "$(os::has_command colima)" = "true" ]; then
+      # 3. Start
+      zmicro colima start --cpu 4 --memory 8 --disk 100
+    fi
     return
   fi
 
   # Linux
-  sudo systemctl status docker >> /dev/null 2>&1
+  sudo systemctl status docker >>/dev/null 2>&1
   if [ "$?" != "0" ]; then
     log::info "Start Docker daemon ..."
 
@@ -107,7 +111,7 @@ docker::start_docker() {
   # sudo docker network create compose-ingress
   if [ "$(docker::is_network_exist)" = "false" ]; then
     log::info "Create Network: ${PACKAGE_DOCKER_DEFAULT_NETWORK}"
-    sudo docker network create $PACKAGE_DOCKER_DEFAULT_NETWORK >> /dev/null 2>&1
+    sudo docker network create $PACKAGE_DOCKER_DEFAULT_NETWORK >>/dev/null 2>&1
   fi
 }
 
@@ -140,7 +144,7 @@ install() {
     #   log::error "You have not binded /var/run/docker.sock."
     #   exit 1
     # fi
-    return 
+    return
   fi
 
   docker::try_to_remove_podman
