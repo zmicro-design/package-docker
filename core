@@ -63,15 +63,16 @@ docker::install_docker_core() {
 
   log::info "Install Docker ..."
   if [ "$(os::is_macos)" = "true" ]; then
-    if [ "$(os::is_ci)" != "true" ]; then
-      # 2. Runtime
-      # brew install colima
-      zmicro package install colima
-    fi
+    # if [ "$(os::is_ci)" != "true" ]; then
+    #   # 2. Runtime
+    #   # brew install colima
+    #   zmicro package install colima
+    # fi
 
-    # MacOS
-    # 1. CLI
-    # brew install docker
+    # 1. Runtime
+    zmicro package install colima
+
+    # 2. CLI
     docker::install_docker_cli_only
   else
     # Linux
