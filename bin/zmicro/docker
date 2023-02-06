@@ -1,12 +1,12 @@
 #!/bin/bash
 
-export PACKAGE_NAME="qemu"
+export PACKAGE_NAME="docker"
 import "$ZMICRO_PACKAGES_PATH/$PACKAGE_NAME/config"
 import "$ZMICRO_PACKAGES_PATH/$PACKAGE_NAME/core"
 
 help() {
   echo "Usage:"
-  echo "  zmicro qemu <args ...>"
+  echo "  zmicro docker <args ...>"
   echo ""
 
   docker --help
@@ -18,7 +18,7 @@ version() {
 
 core() {
   # context directory
-  local context="$ZMICRO_PACKAGES_DATA_PATH/qemu"
+  local context="$ZMICRO_PACKAGES_DATA_PATH/docker"
   if [ ! -d "$context" ]; then
     mkdir -p $context
   fi
