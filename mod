@@ -1,2 +1,2 @@
-VERSION=v1.3.6
+VERSION=v1.3.7
 DESCRIPTION="Package Docker"
