@@ -94,7 +94,7 @@ docker::start_docker() {
     if [ "$(os::has_command colima)" = "true" ]; then
       # 3. Start
       log::info "[$(timestamp)] starting docker with colima ..."
-      zmicro colima start --cpu 4 --memory 8 --disk 100
+      zmicro colima start --cpu 4 --memory 8 --disk 100 --network-address
 
       log::info "[$(timestamp)] show docker status ..."
       zmicro colima status
