@@ -12,6 +12,13 @@ docker::is_docker_installed() {
 
   DOCKER_VERSION=$(docker::get_docker_version)
   log::info "Docker Installed(version: ${DOCKER_VERSION})"
+
+  docker ps >>/dev/null # 2>&1
+  if [ "$?" != "0" ]; then
+    log::debug "[docker::is_docker_installed] Docker Daemon not Started"
+    return 1
+  fi
+
   return 0
 }
 
