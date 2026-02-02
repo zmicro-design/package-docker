@@ -83,8 +83,13 @@ docker::install_docker_core() {
     docker::install_docker_cli_only
   else
     # Linux
-    sudo curl -fsSL https://get.docker.com -o $PACKAGE_DOCKER_TMP_INSTALL_SCRIPT
-    sudo sh $PACKAGE_DOCKER_TMP_INSTALL_SCRIPT
+    if [ "$(net::is_url_visitable https://get.docker.com)" = "true" ]; then
+      sudo curl -fsSL https://get.docker.com -o $PACKAGE_DOCKER_TMP_INSTALL_SCRIPT
+      sudo sh $PACKAGE_DOCKER_TMP_INSTALL_SCRIPT
+    else
+      sudo sh $PACKAGE_DIR/scripts/get.docker.com.sh
+    fi
+
     # Role
     sudo usermod -aG docker $USER
     # Clean
