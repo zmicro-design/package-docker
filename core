@@ -84,11 +84,14 @@ docker::install_docker_core() {
   else
     # Linux
     if [ "$(net::is_url_visitable https://get.docker.com)" = "true" ]; then
+      set +e
       sudo curl -fsSL https://get.docker.com -o $PACKAGE_DOCKER_TMP_INSTALL_SCRIPT
       if [ "$?" != "0" ]; then
         log::info "[$(timestamp)] try to use local script ($PACKAGE_DIR/scripts/get.docker.com.sh) ..."
+        set -e
         sudo sh $PACKAGE_DIR/scripts/get.docker.com.sh
       else
+        set -e
         sudo sh $PACKAGE_DOCKER_TMP_INSTALL_SCRIPT
       fi
     else
